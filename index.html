@@ -916,27 +916,26 @@
             });
         }
         
-        function showMedia(index) { 
+       function showMedia(index) { 
     currentIndex = index; 
     const mediaContainer = document.getElementById('modalMediaContainer'); 
     mediaContainer.innerHTML = ''; 
     
     const mediaPath = currentGallery[index]; 
-    const extension = mediaPath.split('.').pop().toLowerCase(); 
-
+    
     // Google Drive embeds 
-    if(mediaPath.includes(' google.com ')) { 
-        const iframe = document.createElement('iframe'); 
-        iframe.src = mediaPath; 
-        iframe.classList.add('gallery-video-iframe'); 
-        iframe.allowFullscreen = true; 
-        mediaContainer.appendChild(iframe); 
-    } 
-    // Local videos 
-    else if (extension === 'mp4') { 
-        const video = document.createElement('video'); 
-        video.src = mediaPath; 
-        video.controls = true; 
+    if(mediaPath.includes('google.com')) {
+        const iframe = document.createElement('iframe');
+        iframe.src = mediaPath.replace('/view', '/preview');
+        iframe.classList.add('gallery-video-iframe');
+        iframe.allow = "fullscreen";
+        mediaContainer.appendChild(iframe);
+    }
+    // Local videos
+    else if (mediaPath.endsWith('.mp4')) {
+        const video = document.createElement('video');
+        video.src = mediaPath;
+        video.controls = true;
         video.autoplay = true;
         video.classList.add('modal-media');
         mediaContainer.appendChild(video);
@@ -948,17 +947,13 @@
         img.classList.add('modal-media');
         mediaContainer.appendChild(img);
     }
-            
-            // Update active thumbnail
-            const thumbnails = document.querySelectorAll('.gallery-thumbnail');
-            thumbnails.forEach((thumb, i) => {
-                if (i === index) {
-                    thumb.classList.add('active');
-                } else {
-                    thumb.classList.remove('active');
-                }
-            });
-        }
+    
+    // Update active thumbnail
+    const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+    thumbnails.forEach((thumb, i) => {
+        thumb.classList.toggle('active', i === index);
+    });
+}
         
         function closeModal() {
             document.getElementById('galleryModal').style.display = 'none';
